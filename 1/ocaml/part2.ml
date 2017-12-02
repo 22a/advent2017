@@ -8,23 +8,36 @@ let string_to_char_list str =
   let rec rec_str_to_char_list index acc_list =
     if index < 0 then acc_list
     else rec_str_to_char_list (index - 1) (str.[index] :: acc_list) in
-  rec_str_to_char_list (String.length str - 1) [];;
+  rec_str_to_char_list (String.length str - 1) []
 
 let dec_of_char c = (int_of_char c) - 48
 
-let duplicate_head = function
-  | [] -> []
-  | h :: _ as l -> h :: l;;
+(* I didn't end up using this, but here it is anyway *)
+(* let merge (list_a, list_b) = *)
+(*     let rec aux acc = function *)
+(*       | xs, [] -> acc @ xs *)
+(*       | [], ys -> acc @ ys *)
+(*       | x :: xs, y :: ys -> *)
+(*           aux (x :: y :: acc) (xs, ys) in *)
+(*     aux [] (list_a, list_b) *)
 
-let sum_dupes list =
+let split_in_half list =
+    let rec aux i acc = function
+      | [] -> (List.rev acc), []
+      | h :: t as l ->
+          if i = 0 then (List.rev acc), l
+          else aux (i-1) (h :: acc) t in
+    aux (List.length list / 2) [] list
+
+let sum_dupes (list_a, list_b) =
     let rec sum_dupes_rec acc = function
-      | [x] -> acc
-      | a :: (b :: _ as tail) ->
-         if a = b then sum_dupes_rec (acc + a) tail
-         else sum_dupes_rec acc tail in
-    sum_dupes_rec 0 list;;
+      | [], [] -> acc
+      | x :: xs, y :: ys ->
+         if x = y then sum_dupes_rec (acc + (x * 2)) (xs, ys)
+         else sum_dupes_rec acc (xs, ys) in
+    sum_dupes_rec 0 (list_a, list_b)
 
 let chars = string_to_char_list input
 let digits = List.map dec_of_char chars
 
-let () = print_int (sum_dupes (duplicate_head digits))
+let () = print_int (sum_dupes (split_in_half digits))
