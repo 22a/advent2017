@@ -1,21 +1,4 @@
-// --- Day 2: Corruption Checksum ---
-
-// As you walk through the door, a glowing humanoid shape yells in your direction. "You there! Your state appears to be idle. Come help us repair the corruption in this spreadsheet - if we take another millisecond, we'll have to display an hourglass cursor!"
-
-// The spreadsheet consists of rows of apparently-random numbers. To make sure the recovery process is on the right track, they need you to calculate the spreadsheet's checksum. For each row, determine the difference between the largest value and the smallest value; the checksum is the sum of all of these differences.
-
-// For example, given the following spreadsheet:
-
-// 5 1 9 5
-// 7 5 3
-// 2 4 6 8
-// The first row's largest and smallest values are 9 and 1, and their difference is 8.
-// The second row's largest and smallest values are 7 and 3, and their difference is 4.
-// The third row's difference is 6.
-// In this example, the spreadsheet's checksum would be 8 + 4 + 6 = 18.
-
-// What is the checksum for the spreadsheet in your puzzle input?
-
+/* eslint-disable no-tabs */
 const input = `
 409	194	207	470	178	454	235	333	511	103	474	293	525	372	408	428
 4321	2786	6683	3921	265	262	6206	2207	5712	214	6750	2742	777	5297	3764	167
@@ -34,6 +17,7 @@ const input = `
 489	732	57	75	61	797	266	593	324	475	733	737	113	68	267	141
 3858	202	1141	3458	2507	239	199	4400	3713	3980	4170	227	3968	1688	4352	4168
 `
+/* eslint-enable no-tabs */
 
 const rows = input.split('\n')
 const rowsAndColumns = rows.filter(row => row !== '').map(row => row.split('\t'))

@@ -1,5 +1,3 @@
-/* eslint-disable no-tabs */
-const input = `
 409	194	207	470	178	454	235	333	511	103	474	293	525	372	408	428
 4321	2786	6683	3921	265	262	6206	2207	5712	214	6750	2742	777	5297	3764	167
 3536	2675	1298	1069	175	145	706	2614	4067	4377	146	134	1930	3850	213	4151
@@ -16,31 +14,3 @@ const input = `
 140	1005	2063	3048	3742	3361	117	93	2695	1529	120	3480	3061	150	3383	190
 489	732	57	75	61	797	266	593	324	475	733	737	113	68	267	141
 3858	202	1141	3458	2507	239	199	4400	3713	3980	4170	227	3968	1688	4352	4168
-`
-/* eslint-enable no-tabs */
-
-const rows = input.split('\n')
-const rowsAndColumns = rows.filter(row => row !== '').map(row => row.split('\t'))
-const intRows = rowsAndColumns.map(row => row.map(column => parseInt(column)))
-
-const findEvenlyDivisibleResult = list => {
-  for (let i = 0; i < list.length; i++) {
-    for (let j = i + 1; j < list.length; j++) {
-      const small = Math.min(list[i], list[j])
-      const large = Math.max(list[i], list[j])
-      // this could result in x/0 or 0/x with real input
-      // but the problem input doesn't have any of those
-      // edge cases, so we'll just ignore it
-      if (large % small === 0) {
-        return large / small
-      }
-    }
-  }
-  return 0
-}
-
-const checksum = intRows.reduce((sum, row) =>
-  sum + findEvenlyDivisibleResult(row)
-, 0)
-
-console.log(checksum)
