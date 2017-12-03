@@ -24,8 +24,8 @@ Test would likely be very helpful, but for most of the languages I'm using here 
 
 Day | Part | Language(s) 
 --- | ---  | ---
-[1](https://adventofcode.com/2017/day/1)| 1 | [JavaScript](https://github.com/22a/advent2017/blob/master/01/js/part1.js), [OCaml](https://github.com/22a/advent2017/blob/master/01/ocaml/part1.ml)
-[1](https://adventofcode.com/2017/day/1)| 2 | [JavaScript](https://github.com/22a/advent2017/blob/master/01/js/part2.js), [OCaml](https://github.com/22a/advent2017/blob/master/01/ocaml/part2.ml)
+[1](https://adventofcode.com/2017/day/1)| 1 | [JavaScript](https://github.com/22a/advent2017/blob/58c0e5d463defd68ceb4ec9f2afcb209fd8e877d/01/js/part1.js), [OCaml](https://github.com/22a/advent2017/blob/master/01/ocaml/part1.ml), [Perl](https://github.com/22a/advent2017/blob/master/01/perl/part1.pl)
+[1](https://adventofcode.com/2017/day/1)| 2 | [JavaScript](https://github.com/22a/advent2017/blob/58c0e5d463defd68ceb4ec9f2afcb209fd8e877d/01/js/part2.js), [OCaml](https://github.com/22a/advent2017/blob/master/01/ocaml/part2.ml), [Perl](https://github.com/22a/advent2017/blob/master/01/perl/part2.pl)
  | | 
 [2](https://adventofcode.com/2017/day/2)| 1 | [JavaScript](https://github.com/22a/advent2017/blob/master/02/js/part1.js), [Clojure](https://github.com/22a/advent2017/blob/master/02/clj/part1/src/part1/core.clj)
 [2](https://adventofcode.com/2017/day/2)| 2 | [JavaScript](https://github.com/22a/advent2017/blob/master/02/js/part2.js), [Clojure](https://github.com/22a/advent2017/blob/master/02/clj/part2/src/part2/core.clj)
