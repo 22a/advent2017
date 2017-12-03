@@ -15,7 +15,7 @@ I'll be adding a directory for each day `1..25` and storing inside:
 My general approach is to solve the problem in [a boring language](https://developer.mozilla.org/bm/docs/Web/JavaScript) (to serve as pseudocode to make sure I actually understand the problem), I'll submit the solution to get some stars, and then I'll port/rewrite it into a more interesting language.
 
 #### Generic solutions?
-I'm not super concerned with making the solutions generic (work for all inputs), rather I just want to get it working and learn what I can from the problem itself rather than solving edge cases. This may end up biting me in the later non trivial problems but we'll cross that puddle of milk when we come to it. I have, however been leaving comments in places where I've cut corners that would make the solution fragile inputs other than the one provided.
+I'm not super concerned with making the solutions generic (work for all inputs), rather I just want to get it working and learn what I can from the problem itself rather than solving edge cases. This may end up biting me in the later non trivial problems but we'll cross that puddle of milk when we come to it. I have, however, been leaving comments in places where I've cut corners that would make the solution fragile for inputs other than the examples provided.
 
 #### Tests?
 Test would likely be very helpful, but for most of the languages I'm using here it takes me a good deal of time to figure out how to compile/run them so figuring out the correct way to test them would take a disproportionate amount of time.
