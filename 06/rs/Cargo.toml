@@ -1,0 +1,6 @@
+[package]
+name = "rs"
+version = "0.1.0"
+authors = ["Peter Meehan <meehanp2@tcd.ie>"]
+
+[dependencies]
