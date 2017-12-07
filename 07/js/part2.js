@@ -18,7 +18,7 @@ const parse = line => {
 
 const nodes = lines.map(parse)
 
-let rootNodeName;
+let rootNodeName
 
 for (let i of nodes) {
   let isRootNode = true
@@ -29,29 +29,84 @@ for (let i of nodes) {
   }
   if (isRootNode) {
     rootNodeName = i.name
-    console.log(i)
   }
 }
 
+const findNode = (name, allNodes) => {
+  return allNodes.find(n => n.name === name)
+}
+
+const treeWeight = (name, allNodes) => {
+  const currentNode = findNode(name, allNodes)
+  if (!currentNode) return 0
+  if (!currentNode.children) return currentNode.weight
+
+  const allChildrenWeight = currentNode.children.reduce((acc, childName) => {
+    const childWeight = treeWeight(childName, allNodes)
+    return acc + childWeight
+  }, 0)
+
+  return currentNode.weight + allChildrenWeight
+}
+
+// this code is disgusting
+// please do not hate me for it
 const findImbalance = (currentNodeName, allNodes) => {
-  const currentNode = allNodes.find(n => n.name === currentNodeName)
-  const possiblyImbalancedChildren = []
+  const currentNode = findNode(currentNodeName, allNodes)
+  if (!currentNode || !currentNode.children) return
+
   if (currentNode.children.length < 3) {
-    possiblyImbalancedChildren.concat(currentNode.children)
+    const res = currentNode.children.map(child => {
+      return findImbalance(child, allNodes)
+    })
+    const singleRes = res.filter(r => r !== undefined)
+    if (singleRes[0]) {
+      return singleRes[0]
+    }
   } else {
     let xs = []
     let ys = []
-    // let correctWeight
-    // let incorrectWeight
-    for (let child in currentNode.children) {
-      if (xs.length === 0 || child.weight === xs[0]) {
-        xs.push(child.weight)
+    for (let child of currentNode.children) {
+      const subTreeWeight = treeWeight(child, allNodes) + currentNode.weight
+
+      if (xs.length === 0 || subTreeWeight === xs[0].weight) {
+        xs.push({
+          weight: subTreeWeight,
+          name: child
+        })
       } else {
-        ys.push(child.weight)
+        ys.push({
+          weight: subTreeWeight,
+          name: child
+        })
       }
     }
-    if (xs.length > ys.length) {
+    if (ys.length > 0) {
+      const incorrect = ys.length > 1 ? xs[0] : ys[0]
+      const incorrectNode = findNode(incorrect.name, allNodes)
+      const childWeights = []
+      for (let child of incorrectNode.children) {
+        const subTreeWeight = treeWeight(child, allNodes) + currentNode.weight
+        childWeights.push(subTreeWeight)
+      }
 
+      if (childWeights.reduce((a, b) => a === b ? a : NaN)) {
+        const correct = (ys.length > 1 ? ys[0] : xs[0])
+        const correctWeight = treeWeight(correct.name, allNodes)
+        const incorrectWeight = treeWeight(incorrectNode.name, allNodes)
+        const correctDelta = correctWeight - incorrectWeight
+        const solution = incorrectNode.weight + correctDelta
+
+        return `Node ${incorrectNode.name} with tree weight ${incorrectWeight} different from peers: ${correctWeight}. Node weight is ${incorrectNode.weight} but should be ${solution} to balance.`
+      } else {
+        const res = currentNode.children.map(child => {
+          return findImbalance(child, allNodes)
+        })
+        const singleRes = res.filter(r => r !== undefined)
+        if (singleRes[0]) {
+          return singleRes[0]
+        }
+      }
     }
   }
 }
