@@ -1,5 +1,8 @@
+#![feature(slice_rotate)]
+
 use std::fs::File;
 use std::io::prelude::*;
+use std::collections::HashMap;
 
 enum Move {
     Spin { amount: usize },
@@ -13,64 +16,85 @@ fn main() {
     f.read_to_string(&mut contents)
         .expect("something went wrong reading the file");
 
-    let contents = contents.trim(); // remove trailing newline
-
+    let contents = contents.trim();
     let move_strings = contents.split(",").collect::<Vec<&str>>();
-
     let moves = move_strings.iter().map(|s| parse_move(s)).collect::<Vec<Move>>();
 
-    let mut char_order: Vec<char> = vec!['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p'];
-
-    for i in 0..moves.len() {
-        apply_move(&mut char_order, &moves[i]);
-    }
+    let part_1_chars = do_dances(&moves, 1);
 
     print!("Part1: ");
     for i in 0..16 {
-        print!("{}", char_order[i]);
+        print!("{}", part_1_chars[i]);
     }
     print!("\n");
 
-    for m in 1..1000000000 {
-        if m % 10000 == 0 {
-            println!("{}", m)
-        }
-        for i in 0..moves.len() {
-            apply_move(&mut char_order, &moves[i]);
-        }
-    }
+    let part_2_chars = do_dances(&moves, 1000000000);
 
     print!("Part2: ");
     for i in 0..16 {
-        print!("{}", char_order[i]);
+        print!("{}", part_2_chars[i]);
     }
     print!("\n");
 }
 
-fn apply_move(chars: &mut Vec<char>, mov: &Move) {
-    match *mov {
-        Move::Spin {amount} => {
-            let mut scratch: Vec<char> = vec!['!'; 16];
-            for i in 0..16 {
-                scratch[(i + amount) % 16] = chars[i];
+fn do_dances(moves: &Vec<Move>, mut num_dances: usize) -> Vec<char> {
+    let (mut replacements, mut reorder) = compress(&moves);
+    let mut chars: Vec<char> = Vec::with_capacity(16);
+    for i in ('a' as u32)..('p' as u32) + 1 {
+        chars.push(std::char::from_u32(i).unwrap());
+    }
+    while num_dances > 0 {
+        if num_dances & 1 == 1 {
+            chars = reorder.iter().map(|&i| *(replacements.get(&chars[i]).unwrap())).collect();
+        }
+
+        reorder = reorder.iter().map(|&i| reorder[i]).collect();
+        let mut scratch_map: HashMap<char, char> = HashMap::new();
+        for (key, val) in replacements.iter() {
+            scratch_map.insert(*key, *replacements.get(val).unwrap());
+        }
+        for (key, val) in scratch_map.iter() {
+            replacements.insert(*key, *val);
+        }
+
+        num_dances >>= 1
+    }
+    chars
+}
+
+fn compress(moves: &Vec<Move>) -> (HashMap<char, char>, Vec<usize>) {
+    let mut reorder: Vec<usize> = (0..16).collect();
+    let mut replacements = HashMap::new();
+    for i in ('a' as u32)..('p' as u32) + 1 {
+        let c = std::char::from_u32(i).unwrap();
+        replacements.insert(c, c);
+    }
+
+    for i in 0..moves.len() {
+        match moves[i] {
+            Move::Spin {amount} => {
+                reorder.rotate(16 - amount);
+            },
+            Move::Exchange {pos_x, pos_y} => {
+                reorder.swap(pos_x, pos_y);
+            },
+            Move::Partner {target_x, target_y} => {
+                let mut key_x: char = '!';
+                let mut key_y: char = '!';
+                for (key, val) in &replacements {
+                    if *val == target_x {
+                        key_x = *key;
+                    }
+                    if *val == target_y {
+                        key_y = *key;
+                    }
+                }
+                replacements.insert(key_x, target_y);
+                replacements.insert(key_y, target_x);
             }
-            for i in 0..16 {
-                chars[i] = scratch[i];
-            }
-        },
-        Move::Exchange {pos_x, pos_y} => {
-          let x_val = chars[pos_x];
-          let y_val = chars[pos_y];
-          chars[pos_x] = y_val;
-          chars[pos_y] = x_val;
-        },
-        Move::Partner {target_x, target_y} => {
-            let x_index = chars.iter().position(|&x| x == target_x).unwrap();
-            let y_index = chars.iter().position(|&x| x == target_y).unwrap();
-            chars[x_index] = target_y;
-            chars[y_index] = target_x;
         }
     }
+    (replacements, reorder)
 }
 
 fn parse_move(move_str: &str) -> Move {
@@ -97,5 +121,4 @@ fn parse_move(move_str: &str) -> Move {
         },
         _ => panic!("Invalid move: {}", move_str)
     }
-
 }
