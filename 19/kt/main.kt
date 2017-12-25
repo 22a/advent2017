@@ -18,8 +18,11 @@ fun main(args : Array<String>) {
   var currentCol = charField[currentRow].indexOf('|')
   var currentDirection = Direction.DOWN
 
+  var distance = 0
+
   var notFinished = true
   while (notFinished) {
+    distance++
     val currentChar = charField[currentRow][currentCol]
 
     when (currentChar) {
@@ -103,4 +106,5 @@ fun main(args : Array<String>) {
       }
     }
   }
+  println(distance - 1)
 }
